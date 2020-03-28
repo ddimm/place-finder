@@ -2,10 +2,7 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import React from "react";
 
-
-
 export default function Search({ search, setSearch }) {
-
   return (
     <>
       <Grid container spacing={1}>
@@ -16,6 +13,7 @@ export default function Search({ search, setSearch }) {
             id="search"
             label="What's Cookin'?"
             fullWidth
+            value={search}
           />
         </Grid>
       </Grid>
