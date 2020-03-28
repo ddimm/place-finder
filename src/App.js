@@ -15,11 +15,15 @@ import Picker from "./Picker";
 import Search from "./Search";
 import Review from "./Review";
 import { styles } from "./Styles";
-
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 const steps = ["Look for a place", "Select what you want", "Check them out"];
-
+const darkTheme = createMuiTheme({
+  palette: {
+    type: "dark"
+  }
+});
 function App() {
-  const classStyles = styles();
+  const classStyles = styles(darkTheme);
   const [results, setResults] = useState([]);
   const [activeStep, setActiveStep] = useState(0);
   const [search, setSearch] = useState("");
@@ -44,6 +48,12 @@ function App() {
           <Search search={search} setSearch={newText => setSearch(newText)} />
         );
       case 1:
+        if (search === "") {
+          handleBack();
+          return (
+            <Search search={search} setSearch={newText => setSearch(newText)} />
+          );
+        }
         return (
           <Picker
             search={search}
@@ -83,54 +93,56 @@ function App() {
 
   return (
     <>
-      <CssBaseline />
-      <AppBar
-        position="absolute"
-        color="default"
-        className={classStyles.appBar}
-      >
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            What's Cookin'?
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <main className={classStyles.layout}>
-        <Paper className={classStyles.paper}>
-          <Typography component="h1" variant="h4" align="center">
-            What's Good?
-          </Typography>
-          <Stepper activeStep={activeStep} className={classStyles.stepper}>
-            {steps.map(label => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <React.Fragment>
-            {getStepContent(activeStep)}
-            <div className={classStyles.buttons}>
-              {activeStep !== 0 && (
-                <Button onClick={handleBack} className={classStyles.button}>
-                  Back
-                </Button>
-              )}
-              {activeStep === steps.length - 1 ? (
-                <></>
-              ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                  className={classStyles.button}
-                >
-                  {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                </Button>
-              )}
-            </div>
-          </React.Fragment>
-        </Paper>
-      </main>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <AppBar
+          position="absolute"
+          color="default"
+          className={classStyles.appBar}
+        >
+          <Toolbar>
+            <Typography variant="h6" color="inherit" noWrap>
+              What's Cookin'?
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <main className={classStyles.layout}>
+          <Paper className={classStyles.paper}>
+            <Typography component="h1" variant="h4" align="center">
+              What's Good?
+            </Typography>
+            <Stepper activeStep={activeStep} className={classStyles.stepper}>
+              {steps.map(label => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <React.Fragment>
+              {getStepContent(activeStep)}
+              <div className={classStyles.buttons}>
+                {activeStep !== 0 && (
+                  <Button onClick={handleBack} className={classStyles.button}>
+                    Back
+                  </Button>
+                )}
+                {activeStep === steps.length - 1 ? (
+                  <></>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    className={classStyles.button}
+                  >
+                    {activeStep === steps.length - 1 ? "Place order" : "Next"}
+                  </Button>
+                )}
+              </div>
+            </React.Fragment>
+          </Paper>
+        </main>
+      </ThemeProvider>
     </>
   );
 }
